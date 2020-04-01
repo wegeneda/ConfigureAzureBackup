@@ -35,7 +35,7 @@
         "RSVName": {
             "type": "String",
             "metadata": {
-                "displayName": "Name of the Recovery Service Vault",
+                "displayName": "Name of the Recovery Service Vault"
             }
         },
         "backupPolicyName": {
