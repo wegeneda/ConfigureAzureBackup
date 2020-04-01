@@ -56,13 +56,13 @@
             "apiVersion": "2018-05-01",
             "properties": {
                 "scope": "[concat(subscription().id, '/resourceGroups/', parameters('rgName'))]",
-                "policyDefinitionId": "[parameters('policyDefinitionID')]"
-            },
-            "parameters": {
-                "vaultLocation": "[parameters('vaultLocation')]",
-                "backupPolicyId": "[variables('backupPolicyID')]",
-                "effect": "deployIfNotExist"
-            }
+                "policyDefinitionId": "[parameters('policyDefinitionID')]",
+                "parameters": {
+                    "vaultLocation": "[parameters('vaultLocation')]",
+                    "backupPolicyId": "[variables('backupPolicyID')]",
+                    "effect": "deployIfNotExist"
+                }
+            }            
         }
     ]
 }
