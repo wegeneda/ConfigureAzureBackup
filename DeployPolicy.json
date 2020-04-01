@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "policyAssignmentName": {
+            "type": "string",
+            "defaultValue": "Configure backup on VMs of a location to an existing central Vault in the same location",
+            "metadata": {
+                "description": "Specifies the name of the policy assignment."
+            }
+        },
+        "rgName": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().name]",
+            "metadata": {
+                "description": "Specifies the name of the resource group where you want to assign the policy."
+            }
+        },
+        "policyDefinitionID": {
+            "type": "string",
+            "defaultValue": "09ce66bc-1220-4153-8104-e3f51c936913",
+            "metadata": {
+                "description": "Specifies the ID of the policy definition or policy set definition being assigned."
+            }
+        },
+        "vaultLocation": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "displayName": "Location (Specify the location of the VMs that you want to protect)",
+                "description": "Specify the location of the VMs that you want to protect. VMs should be backed up to a vault in the same location.\nFor example - southeastasia",
+                "strongType": "location"
+            }
+        },
+        "RSVName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Name of the Recovery Service Vault",
+            }
+        },
+        "backupPolicyName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Backup Policy (of type Azure VM from a vault in the location chosen above)"
+            }
+        }
+    },
+    "variables": {
+        "subscriptionID": "[subscription().subscriptionId]",
+        "backupPolicyID": "[concat(variables('subscriptionID'), parameters('rGname'), '/Microsoft.RecoveryServices/vaults/', parameters('RSVName'), '/', parameters('backupPolicyName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[parameters('policyAssignmentName')]",
+            "apiVersion": "2018-05-01",
+            "properties": {
+                "scope": "[concat(subscription().id, '/resourceGroups/', parameters('rgName'))]",
+                "policyDefinitionId": "[parameters('policyDefinitionID')]"
+            },
+            "parameters": {
+                "vaultLocation": "[parameters('vaultLocation')]",
+                "backupPolicyId": "[variables('backupPolicyID')]",
+                "effect": "deployIfNotExist"
+            }
+        }
+    ]
+}
